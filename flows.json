@@ -16,6 +16,14 @@
         "env": []
     },
     {
+        "id": "ee101a16bac96724",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "45e44e70e4f7d4b9",
         "type": "mqtt-broker",
         "name": "",
@@ -737,6 +745,16 @@
         "groupType": "default"
     },
     {
+        "id": "87aa018d284ecdd7",
+        "type": "ui_spacer",
+        "z": "ee101a16bac96724",
+        "name": "spacer",
+        "group": "7a4c679c6a2cce5d",
+        "order": 2,
+        "width": 1,
+        "height": 1
+    },
+    {
         "id": "26a046eb91e23718",
         "type": "mqtt in",
         "z": "c46b4338b9d0b0c2",
@@ -1366,7 +1384,7 @@
         "name": "",
         "group": "6cb23f4f53e1a46d",
         "label": "TRỢ LÝ AI CHĂM SÓC VƯỜN",
-        "order": 2,
+        "order": 4,
         "width": 0,
         "height": 0,
         "options": [
@@ -1961,5 +1979,744 @@
         "x": 630,
         "y": 660,
         "wires": []
+    },
+    {
+        "id": "c1bbf74cd5a42e4b",
+        "type": "mqtt in",
+        "z": "ee101a16bac96724",
+        "name": "",
+        "topic": "doan_vuon/doam_dat",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "45e44e70e4f7d4b9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "bcbb226469d91b6d",
+                "73eafd613eb1181a"
+            ]
+        ]
+    },
+    {
+        "id": "bcbb226469d91b6d",
+        "type": "debug",
+        "z": "ee101a16bac96724",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 360,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "385b97b8f2e16244",
+        "type": "inject",
+        "z": "ee101a16bac96724",
+        "name": "Giả lập bấm tưới",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "TUOI",
+        "payloadType": "str",
+        "x": 740,
+        "y": 740,
+        "wires": [
+            [
+                "73341536dca10ba2"
+            ]
+        ]
+    },
+    {
+        "id": "73341536dca10ba2",
+        "type": "function",
+        "z": "ee101a16bac96724",
+        "name": "Đếm số lần bấm tưới",
+        "func": "// Lấy số lần tưới hiện tại.\n// Nếu chưa có thì mặc định là 0.\nlet count = flow.get(\"wateringCount\") || 0;\n\n// Mỗi lần bấm inject giả lập, tăng số lần tưới lên 1.\ncount = count + 1;\n\n// Lưu lại vào bộ nhớ flow của Node-RED.\nflow.set(\"wateringCount\", count);\n\n// In nội dung ra debug để kiểm tra.\nmsg.payload = \"Số lần tưới hôm nay: \" + count;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 740,
+        "wires": [
+            [
+                "3c99b0038d820131"
+            ]
+        ]
+    },
+    {
+        "id": "3c99b0038d820131",
+        "type": "debug",
+        "z": "ee101a16bac96724",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "b7a373e51e7fdc59",
+        "type": "inject",
+        "z": "ee101a16bac96724",
+        "name": "Gửi email test",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 730,
+        "y": 820,
+        "wires": [
+            [
+                "d25ae113544b1c6e"
+            ]
+        ]
+    },
+    {
+        "id": "d25ae113544b1c6e",
+        "type": "function",
+        "z": "ee101a16bac96724",
+        "name": "Tạp nội dung email test",
+        "func": "// Lấy số lần tưới đã lưu\nlet count = flow.get(\"wateringCount\") || 0;\n\n// Lấy thời gian hiện tại\nlet now = new Date();\n\nlet timeText = now.toLocaleString(\"vi-VN\", {\n    timeZone: \"Asia/Ho_Chi_Minh\"\n});\n\n// Email người nhận.\n// Có thể đổi thành email của bạn.\nmsg.to = \"bthloan2006@gmail.com\";\n\n// Tiêu đề email\nmsg.topic = \"Báo cáo tưới nước hằng ngày - Vườn thông minh IoT\";\n\n// Nội dung email\nmsg.payload =\n    `BÁO CÁO HỆ THỐNG VƯỜN THÔNG MINH IOT\n\nThời gian gửi báo cáo: ${timeText}\n\nHôm nay hệ thống đã kích hoạt tưới nước: ${count} lần.\n\nGhi chú:\n- Đây là email báo cáo định kỳ hằng ngày.\n- Chức năng này dùng riêng cho yêu cầu Email.\n- Không dùng chung điều kiện với thông báo nhanh.\n\nTrân trọng,\nHệ thống Vườn Thông Minh IoT`;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 820,
+        "wires": [
+            [
+                "37165fe40fa24e4e",
+                "8ca22e871b8c90bf"
+            ]
+        ]
+    },
+    {
+        "id": "c66778300be0c369",
+        "type": "function",
+        "z": "ee101a16bac96724",
+        "name": "Reset số lần tưới",
+        "func": "// Sau khi gửi email báo cáo xong,\n// reset số lần tưới về 0 để bắt đầu chu kỳ mới.\nflow.set(\"wateringCount\", 0);\n\nmsg.payload = \"Đã gửi email và reset số lần tưới về 0.\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1210,
+        "y": 900,
+        "wires": [
+            [
+                "a1c2e83f94fe9376"
+            ]
+        ]
+    },
+    {
+        "id": "37165fe40fa24e4e",
+        "type": "e-mail",
+        "z": "ee101a16bac96724",
+        "server": "smtp.gmail.com",
+        "port": "465",
+        "authtype": "BASIC",
+        "saslformat": true,
+        "token": "oauth2Response.access_token",
+        "secure": true,
+        "tls": true,
+        "name": "bthloan2006@gmail.com",
+        "dname": "Gửi email",
+        "x": 1240,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "a1c2e83f94fe9376",
+        "type": "debug",
+        "z": "ee101a16bac96724",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1400,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "8ca22e871b8c90bf",
+        "type": "delay",
+        "z": "ee101a16bac96724",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1020,
+        "y": 900,
+        "wires": [
+            [
+                "c66778300be0c369"
+            ]
+        ]
+    },
+    {
+        "id": "73eafd613eb1181a",
+        "type": "ui-gauge",
+        "z": "ee101a16bac96724",
+        "name": "Độ ẩm đất",
+        "group": "f1f06f871d416447",
+        "order": 2,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#ea5353",
+                "text": "Đất khô",
+                "textType": "str"
+            },
+            {
+                "from": "40",
+                "color": "#ffc800",
+                "text": "Cần chú ý",
+                "textType": "str"
+            },
+            {
+                "from": "70",
+                "color": "#5cd65c",
+                "text": "Đất đang đủ ẩm",
+                "textType": "str"
+            }
+        ],
+        "min": 0,
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 170,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a86d6d2821adcce9",
+        "type": "ui-gauge",
+        "z": "ee101a16bac96724",
+        "name": "Độ ẩm không khí",
+        "group": "c3bc85cb79ea064a",
+        "order": 2,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-tile",
+        "gstyle": "needle",
+        "title": "",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "40",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "70",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 390,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9c83ac4948e43a78",
+        "type": "ui-text",
+        "z": "ee101a16bac96724",
+        "group": "85975d4139e0d33c",
+        "order": 2,
+        "width": "3",
+        "height": "3",
+        "name": "Trạng thái ánh sáng",
+        "label": "Hiện tại",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "TRỜI NẮNG",
+        "valueType": "str",
+        "x": 820,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "faf71086983a66c6",
+        "type": "ui-gauge",
+        "z": "ee101a16bac96724",
+        "name": "Nhiệt độ",
+        "group": "6e911e57b57c754f",
+        "order": 2,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-tank",
+        "gstyle": "needle",
+        "title": "gauge",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#a8f5ff",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "15",
+                "color": "#55dbec",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "25",
+                "color": "#f0f24a",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "30",
+                "color": "#d12323",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 600,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ab3432bcea832254",
+        "type": "ui-chart",
+        "z": "ee101a16bac96724",
+        "group": "31f2aa34c39a5eae",
+        "name": "",
+        "label": "Biểu đồ độ ẩm của đất hàng ngày",
+        "order": 2,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "Thời gian trong ngày",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Độ ẩm đất (%)",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "100",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "15",
+        "height": "7",
+        "className": "",
+        "interpolation": "linear",
+        "x": 260,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f8e742042503b164",
+        "type": "ui-button",
+        "z": "ee101a16bac96724",
+        "group": "52a2c71c5fe3a7bc",
+        "name": "Gửi email",
+        "label": "NHÂN GỬI",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 180,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e56cf1b4c6c145d8",
+        "type": "ui-button",
+        "z": "ee101a16bac96724",
+        "group": "09dc475cc7f4e422",
+        "name": "Báo động",
+        "label": "NHẤN BÁO ĐỘNG",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 420,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2eb0decdb85ad07c",
+        "type": "ui-button",
+        "z": "ee101a16bac96724",
+        "group": "3f0d7138c5d9a38f",
+        "name": "",
+        "label": "NHẤN BƠM NƯỚC",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 660,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "11ec93fa17a8b67d",
+        "type": "ui-table",
+        "z": "ee101a16bac96724",
+        "group": "c53779857d4b3197",
+        "name": "",
+        "label": "Nhật ký thông báo hằng ngày",
+        "order": 2,
+        "width": "6",
+        "height": "4",
+        "maxrows": "5",
+        "passthru": false,
+        "autocols": true,
+        "showSearch": true,
+        "deselect": true,
+        "selectionType": "none",
+        "columns": [],
+        "mobileBreakpoint": "sm",
+        "mobileBreakpointType": "defaults",
+        "action": "append",
+        "className": "",
+        "x": 240,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "00f0d032b68cfb31",
+        "type": "ui-form",
+        "z": "ee101a16bac96724",
+        "name": "",
+        "group": "6cb23f4f53e1a46d",
+        "label": "TRỢ LÝ AI CHĂM SÓC VƯỜN",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Nguồn dữ liệu",
+                "key": "mode",
+                "type": "dropdown",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Câu hỏi",
+                "key": "question",
+                "type": "multiline",
+                "required": true,
+                "rows": 3
+            }
+        ],
+        "formValue": {
+            "mode": "",
+            "question": ""
+        },
+        "payload": "",
+        "submit": "Gửi câu hỏi",
+        "cancel": "clear",
+        "resetOnSubmit": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": true,
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "",
+                "value": "current",
+                "label": "Dữ liệu hiện tại"
+            },
+            {
+                "dropdown": "",
+                "value": "history",
+                "label": "Tổng hợp quá khứ"
+            }
+        ],
+        "x": 250,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e59a70b2df3c76a4",
+        "type": "ui-markdown",
+        "z": "ee101a16bac96724",
+        "group": "6cb23f4f53e1a46d",
+        "name": "",
+        "order": 2,
+        "width": "6",
+        "height": "2",
+        "content": "### 🌱 Trợ lý vườn thông minh\n\n{{ msg?.payload || 'Hãy nhập câu hỏi để bắt đầu.' }}",
+        "className": "",
+        "x": 470,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c91dae6334e3b98a",
+        "type": "function",
+        "z": "ee101a16bac96724",
+        "name": "Chuẩn hoá wifi",
+        "func": "const status = String(msg.payload || \"\")\n    .trim()\n    .toUpperCase();\n\nif (status !== \"ONLINE\" && status !== \"OFFLINE\") {\n    return null;\n}\n\nmsg.payload = status;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "81dd5fa43716fbbd",
+        "type": "ui-template",
+        "z": "ee101a16bac96724",
+        "group": "8cc669342acdbda5",
+        "page": "",
+        "ui": "",
+        "name": "",
+        "order": 2,
+        "width": "6",
+        "height": "4",
+        "head": "",
+        "format": "<template>\n    <div class=\"system-box\">\n        <div class=\"system-title\">\n            TRẠNG THÁI HỆ THỐNG\n        </div>\n\n        <div class=\"connection-status\">\n            <span\n                class=\"status-dot\"\n                :class=\"msg?.payload === 'ONLINE' ? 'dot-online' : 'dot-offline'\">\n            </span>\n\n            <span>\n                {{ msg?.payload === 'ONLINE'\n                    ? 'Đã kết nối WiFi'\n                    : 'Mất kết nối WiFi' }}\n            </span>\n        </div>\n    </div>\n</template>\n\n<style>\n.system-box {\n    width: 100%;\n    height: 100%;\n    min-height: 130px;\n    box-sizing: border-box;\n\n    background-color: #fffdf2;\n    border: 2px solid #333;\n    border-radius: 2px;\n\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n\n    padding: 14px;\n}\n\n.system-title {\n    color: #e86b64;\n    font-size: 14px;\n    font-weight: 700;\n    text-align: center;\n}\n\n.connection-status {\n    flex: 1;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    gap: 9px;\n\n    color: #444;\n    font-size: 16px;\n}\n\n.status-dot {\n    width: 12px;\n    height: 12px;\n    border-radius: 50%;\n}\n\n.dot-online {\n    background-color: #22c55e;\n    box-shadow: 0 0 6px #22c55e;\n}\n\n.dot-offline {\n    background-color: #ef4444;\n    box-shadow: 0 0 6px #ef4444;\n}\n</style>",
+        "storeOutMessages": true,
+        "passthru": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 780,
+        "y": 420,
+        "wires": [
+            []
+        ]
     }
 ]

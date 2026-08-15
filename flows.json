@@ -520,8 +520,8 @@
         "type": "ui-group",
         "name": "Nhật ký",
         "page": "26eca085c5b5b0ab",
-        "width": "6",
-        "height": "5",
+        "width": "7",
+        "height": "1",
         "order": 9,
         "showTitle": true,
         "className": "",
@@ -534,8 +534,8 @@
         "type": "ui-group",
         "name": "Trạng thái wifi",
         "page": "26eca085c5b5b0ab",
-        "width": "6",
-        "height": "4",
+        "width": "5",
+        "height": "1",
         "order": 10,
         "showTitle": true,
         "className": "",
@@ -722,7 +722,7 @@
         "id": "26a046eb91e23718",
         "type": "mqtt in",
         "z": "c46b4338b9d0b0c2",
-        "name": "",
+        "name": "Nhận độ ẩm đất",
         "topic": "doan_vuon/doam_dat",
         "qos": "2",
         "datatype": "auto-detect",
@@ -731,221 +731,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 140,
-        "y": 120,
+        "x": 160,
+        "y": 60,
         "wires": [
             [
-                "1b35627d1aa7fe8d",
-                "9ebe443d79e0f96f"
-            ]
-        ]
-    },
-    {
-        "id": "1b35627d1aa7fe8d",
-        "type": "debug",
-        "z": "c46b4338b9d0b0c2",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 360,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "022e82c0a2016988",
-        "type": "inject",
-        "z": "c46b4338b9d0b0c2",
-        "name": "Giả lập bấm tưới",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "TUOI",
-        "payloadType": "str",
-        "x": 1740,
-        "y": 280,
-        "wires": [
-            [
-                "ade7d8133e98d16a"
-            ]
-        ]
-    },
-    {
-        "id": "ade7d8133e98d16a",
-        "type": "function",
-        "z": "c46b4338b9d0b0c2",
-        "name": "Đếm số lần bấm tưới",
-        "func": "// Lấy số lần tưới hiện tại.\n// Nếu chưa có thì mặc định là 0.\nlet count = flow.get(\"wateringCount\") || 0;\n\n// Mỗi lần bấm inject giả lập, tăng số lần tưới lên 1.\ncount = count + 1;\n\n// Lưu lại vào bộ nhớ flow của Node-RED.\nflow.set(\"wateringCount\", count);\n\n// In nội dung ra debug để kiểm tra.\nmsg.payload = \"Số lần tưới hôm nay: \" + count;\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1980,
-        "y": 280,
-        "wires": [
-            [
-                "99368f521372b4e3"
-            ]
-        ]
-    },
-    {
-        "id": "99368f521372b4e3",
-        "type": "debug",
-        "z": "c46b4338b9d0b0c2",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 2200,
-        "y": 280,
-        "wires": []
-    },
-    {
-        "id": "b731070824e7d433",
-        "type": "inject",
-        "z": "c46b4338b9d0b0c2",
-        "name": "Gửi email test",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 1730,
-        "y": 360,
-        "wires": [
-            [
-                "b16472f5d2589bf8"
-            ]
-        ]
-    },
-    {
-        "id": "b16472f5d2589bf8",
-        "type": "function",
-        "z": "c46b4338b9d0b0c2",
-        "name": "Tạp nội dung email test",
-        "func": "// Lấy số lần tưới đã lưu\nlet count = flow.get(\"wateringCount\") || 0;\n\n// Lấy thời gian hiện tại\nlet now = new Date();\n\nlet timeText = now.toLocaleString(\"vi-VN\", {\n    timeZone: \"Asia/Ho_Chi_Minh\"\n});\n\n// Email người nhận.\n// Có thể đổi thành email của bạn.\nmsg.to = \"bthloan2006@gmail.com\";\n\n// Tiêu đề email\nmsg.topic = \"Báo cáo tưới nước hằng ngày - Vườn thông minh IoT\";\n\n// Nội dung email\nmsg.payload =\n    `BÁO CÁO HỆ THỐNG VƯỜN THÔNG MINH IOT\n\nThời gian gửi báo cáo: ${timeText}\n\nHôm nay hệ thống đã kích hoạt tưới nước: ${count} lần.\n\nGhi chú:\n- Đây là email báo cáo định kỳ hằng ngày.\n- Chức năng này dùng riêng cho yêu cầu Email.\n- Không dùng chung điều kiện với thông báo nhanh.\n\nTrân trọng,\nHệ thống Vườn Thông Minh IoT`;\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1990,
-        "y": 360,
-        "wires": [
-            [
-                "7f560a4525227ace",
-                "f2d6d2f749fc3cd8"
-            ]
-        ]
-    },
-    {
-        "id": "a4d1f76522e11bd6",
-        "type": "function",
-        "z": "c46b4338b9d0b0c2",
-        "name": "Reset số lần tưới",
-        "func": "// Sau khi gửi email báo cáo xong,\n// reset số lần tưới về 0 để bắt đầu chu kỳ mới.\nflow.set(\"wateringCount\", 0);\n\nmsg.payload = \"Đã gửi email và reset số lần tưới về 0.\";\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 2210,
-        "y": 440,
-        "wires": [
-            [
-                "2dad2ba95505f889"
-            ]
-        ]
-    },
-    {
-        "id": "7f560a4525227ace",
-        "type": "e-mail",
-        "z": "c46b4338b9d0b0c2",
-        "server": "smtp.gmail.com",
-        "port": "465",
-        "authtype": "BASIC",
-        "saslformat": true,
-        "token": "oauth2Response.access_token",
-        "secure": true,
-        "tls": true,
-        "name": "bthloan2006@gmail.com",
-        "dname": "Gửi email",
-        "x": 2240,
-        "y": 360,
-        "wires": []
-    },
-    {
-        "id": "2dad2ba95505f889",
-        "type": "debug",
-        "z": "c46b4338b9d0b0c2",
-        "name": "debug 3",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 2400,
-        "y": 440,
-        "wires": []
-    },
-    {
-        "id": "f2d6d2f749fc3cd8",
-        "type": "delay",
-        "z": "c46b4338b9d0b0c2",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "2",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 2020,
-        "y": 440,
-        "wires": [
-            [
-                "a4d1f76522e11bd6"
+                "85b844a6b20ffe2c"
             ]
         ]
     },
@@ -997,8 +787,8 @@
         "styleRounded": true,
         "styleGlow": false,
         "className": "",
-        "x": 170,
-        "y": 220,
+        "x": 590,
+        "y": 60,
         "wires": [
             []
         ]
@@ -1051,8 +841,8 @@
         "styleRounded": true,
         "styleGlow": false,
         "className": "",
-        "x": 390,
-        "y": 220,
+        "x": 890,
+        "y": 180,
         "wires": [
             []
         ]
@@ -1077,8 +867,8 @@
         "className": "",
         "value": "TRỜI NẮNG",
         "valueType": "str",
-        "x": 820,
-        "y": 220,
+        "x": 1320,
+        "y": 180,
         "wires": []
     },
     {
@@ -1135,8 +925,8 @@
         "styleRounded": true,
         "styleGlow": false,
         "className": "",
-        "x": 600,
-        "y": 220,
+        "x": 1100,
+        "y": 180,
         "wires": [
             []
         ]
@@ -1197,8 +987,8 @@
         "height": "7",
         "className": "",
         "interpolation": "linear",
-        "x": 260,
-        "y": 440,
+        "x": 940,
+        "y": 60,
         "wires": [
             []
         ]
@@ -1234,11 +1024,11 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 160,
-        "y": 300,
+        "x": 140,
+        "y": 320,
         "wires": [
             [
-                "7415a16c5a7072e4"
+                "8b89ad4cf63b80ce"
             ]
         ]
     },
@@ -1273,8 +1063,8 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 600,
-        "y": 440,
+        "x": 1200,
+        "y": 60,
         "wires": [
             []
         ]
@@ -1310,8 +1100,8 @@
         "enablePointerup": false,
         "pointerupPayload": "",
         "pointerupPayloadType": "str",
-        "x": 840,
-        "y": 440,
+        "x": 1400,
+        "y": 60,
         "wires": [
             []
         ]
@@ -1324,21 +1114,54 @@
         "name": "",
         "label": "Nhật ký thông báo hằng ngày",
         "order": 1,
-        "width": "6",
-        "height": "4",
-        "maxrows": "5",
+        "width": "0",
+        "height": "0",
+        "maxrows": "3",
         "passthru": false,
         "autocols": true,
-        "showSearch": true,
+        "showSearch": false,
         "deselect": true,
         "selectionType": "none",
-        "columns": [],
-        "mobileBreakpoint": "sm",
-        "mobileBreakpointType": "defaults",
-        "action": "append",
+        "columns": [
+            {
+                "title": "Thời gian",
+                "key": "time",
+                "keyType": "key",
+                "type": "text",
+                "width": "15%",
+                "align": "start"
+            },
+            {
+                "title": "Loại",
+                "key": "type",
+                "keyType": "key",
+                "type": "text",
+                "width": "15%",
+                "align": "start"
+            },
+            {
+                "title": "Nội dung",
+                "key": "content",
+                "keyType": "key",
+                "type": "text",
+                "width": "50%",
+                "align": "start"
+            },
+            {
+                "title": "Trạng thái",
+                "key": "status",
+                "keyType": "key",
+                "type": "text",
+                "width": "20%",
+                "align": "start"
+            }
+        ],
+        "mobileBreakpoint": "",
+        "mobileBreakpointType": "none",
+        "action": "replace",
         "className": "",
-        "x": 260,
-        "y": 500,
+        "x": 1540,
+        "y": 380,
         "wires": [
             []
         ]
@@ -1350,7 +1173,7 @@
         "name": "",
         "group": "6cb23f4f53e1a46d",
         "label": "TRỢ LÝ AI CHĂM SÓC VƯỜN",
-        "order": 2,
+        "order": 1,
         "width": 0,
         "height": 0,
         "options": [
@@ -1394,67 +1217,8 @@
                 "label": "Tổng hợp quá khứ"
             }
         ],
-        "x": 270,
-        "y": 560,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "4fbe2d799073c328",
-        "type": "ui-markdown",
-        "z": "c46b4338b9d0b0c2",
-        "group": "6cb23f4f53e1a46d",
-        "name": "",
-        "order": 1,
-        "width": "6",
-        "height": "2",
-        "content": "### 🌱 Trợ lý vườn thông minh\n\n{{ msg?.payload || 'Hãy nhập câu hỏi để bắt đầu.' }}",
-        "className": "",
-        "x": 670,
-        "y": 620,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "9333848ce6647220",
-        "type": "function",
-        "z": "c46b4338b9d0b0c2",
-        "name": "Chuẩn hoá wifi",
-        "func": "const status = String(msg.payload || \"\")\n    .trim()\n    .toUpperCase();\n\nif (status !== \"ONLINE\" && status !== \"OFFLINE\") {\n    return null;\n}\n\nmsg.payload = status;\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 700,
-        "y": 560,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "a4fde89be3a91067",
-        "type": "ui-template",
-        "z": "c46b4338b9d0b0c2",
-        "group": "8cc669342acdbda5",
-        "page": "",
-        "ui": "",
-        "name": "",
-        "order": 1,
-        "width": "6",
-        "height": "4",
-        "head": "",
-        "format": "<template>\n    <div class=\"system-box\">\n        <div class=\"system-title\">\n            TRẠNG THÁI HỆ THỐNG\n        </div>\n\n        <div class=\"connection-status\">\n            <span\n                class=\"status-dot\"\n                :class=\"msg?.payload === 'ONLINE' ? 'dot-online' : 'dot-offline'\">\n            </span>\n\n            <span>\n                {{ msg?.payload === 'ONLINE'\n                    ? 'Đã kết nối WiFi'\n                    : 'Mất kết nối WiFi' }}\n            </span>\n        </div>\n    </div>\n</template>\n\n<style>\n.system-box {\n    width: 100%;\n    height: 100%;\n    min-height: 130px;\n    box-sizing: border-box;\n\n    background-color: #fffdf2;\n    border: 2px solid #333;\n    border-radius: 2px;\n\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n\n    padding: 14px;\n}\n\n.system-title {\n    color: #e86b64;\n    font-size: 14px;\n    font-weight: 700;\n    text-align: center;\n}\n\n.connection-status {\n    flex: 1;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    gap: 9px;\n\n    color: #444;\n    font-size: 16px;\n}\n\n.status-dot {\n    width: 12px;\n    height: 12px;\n    border-radius: 50%;\n}\n\n.dot-online {\n    background-color: #22c55e;\n    box-shadow: 0 0 6px #22c55e;\n}\n\n.dot-offline {\n    background-color: #ef4444;\n    box-shadow: 0 0 6px #ef4444;\n}\n</style>",
-        "storeOutMessages": true,
-        "passthru": true,
-        "resendOnRefresh": true,
-        "templateScope": "local",
-        "className": "",
-        "x": 960,
-        "y": 560,
+        "x": 930,
+        "y": 120,
         "wires": [
             []
         ]
@@ -1515,8 +1279,8 @@
         "className": "",
         "passthru": false,
         "dropdownOptions": [],
-        "x": 100,
-        "y": 700,
+        "x": 140,
+        "y": 580,
         "wires": [
             [
                 "5215c2c1b54b9621"
@@ -1535,8 +1299,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 310,
-        "y": 700,
+        "x": 330,
+        "y": 580,
         "wires": [
             [
                 "1751bacc0205ee52"
@@ -1557,8 +1321,8 @@
         "cells": "Users!A1:G",
         "flatten": false,
         "name": "Read Users",
-        "x": 510,
-        "y": 780,
+        "x": 590,
+        "y": 580,
         "wires": [
             [
                 "5b1d2bc77dcad083"
@@ -1582,8 +1346,8 @@
                 "module": "bcryptjs"
             }
         ],
-        "x": 760,
-        "y": 780,
+        "x": 820,
+        "y": 580,
         "wires": [
             [
                 "8ce87d56ef68f054"
@@ -1604,8 +1368,8 @@
         "cells": "Users!A1:G",
         "flatten": false,
         "name": "Append Test User",
-        "x": 990,
-        "y": 700,
+        "x": 1050,
+        "y": 520,
         "wires": [
             [
                 "9a55de33f9bdad97"
@@ -1630,8 +1394,8 @@
         "raw": false,
         "className": "",
         "name": "",
-        "x": 690,
-        "y": 660,
+        "x": 1230,
+        "y": 700,
         "wires": [
             []
         ]
@@ -1648,8 +1412,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1320,
-        "y": 700,
+        "x": 1300,
+        "y": 520,
         "wires": [
             [
                 "eddc34819cf388cd"
@@ -1696,8 +1460,8 @@
         "className": "",
         "passthru": false,
         "dropdownOptions": [],
-        "x": 110,
-        "y": 1020,
+        "x": 150,
+        "y": 880,
         "wires": [
             [
                 "c870c4ae2f2bc6d4"
@@ -1717,7 +1481,7 @@
         "finalize": "",
         "libs": [],
         "x": 370,
-        "y": 1020,
+        "y": 880,
         "wires": [
             [
                 "e64dcad929cb065c"
@@ -1739,7 +1503,7 @@
         "flatten": false,
         "name": "Read Users",
         "x": 630,
-        "y": 940,
+        "y": 800,
         "wires": [
             [
                 "12ce3a1fa821abe7"
@@ -1764,8 +1528,8 @@
         "raw": false,
         "className": "",
         "name": "",
-        "x": 1470,
-        "y": 1120,
+        "x": 1150,
+        "y": 1040,
         "wires": [
             []
         ]
@@ -1787,8 +1551,8 @@
                 "module": "bcryptjs"
             }
         ],
-        "x": 880,
-        "y": 940,
+        "x": 860,
+        "y": 920,
         "wires": [
             [
                 "4464559991daf022"
@@ -1805,8 +1569,8 @@
         "name": "ui-control",
         "ui": "6e38178641525a85",
         "events": "all",
-        "x": 1620,
-        "y": 840,
+        "x": 1500,
+        "y": 820,
         "wires": [
             []
         ]
@@ -1874,8 +1638,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 390,
-        "y": 300,
+        "x": 670,
+        "y": 320,
         "wires": [
             [
                 "462f93affc47f839"
@@ -1890,19 +1654,19 @@
         "type": "function",
         "z": "c46b4338b9d0b0c2",
         "name": "Tạo nội dung email test",
-        "func": "// Lấy số lần tưới đã lưu\nlet count = flow.get(\"wateringCount\") || 0;\n\n// Lấy thời gian hiện tại\nlet now = new Date();\n\nlet timeText = now.toLocaleString(\"vi-VN\", {\n    timeZone: \"Asia/Ho_Chi_Minh\"\n});\n\nconst recipient = String(msg.to || \"\").trim();\n\nif (!recipient) {\n    node.error(\n        \"Không tìm thấy địa chỉ người nhận trong msg.to\",\n        msg\n    );\n\n    return null;\n}\n\n// Email người nhận.\n// Có thể đổi thành email của bạn.\nmsg.to = recipient;\n\n// Tiêu đề email\nmsg.topic = \"Báo cáo tưới nước hằng ngày - Vườn thông minh IoT\";\n\n// Nội dung email\nmsg.payload =\n    `BÁO CÁO HỆ THỐNG VƯỜN THÔNG MINH IOT\n\nThời gian gửi báo cáo: ${timeText}\n\nHôm nay hệ thống đã kích hoạt tưới nước: ${count} lần.\n\nGhi chú:\n- Đây là email báo cáo định kỳ hằng ngày.\n- Chức năng này dùng riêng cho yêu cầu Email.\n- Không dùng chung điều kiện với thông báo nhanh.\n\nTrân trọng,\nHệ thống Vườn Thông Minh IoT`;\n\nreturn msg;\n",
+        "func": "// Lấy số lần tưới đã lưu\nconst todayCount = Number(msg.payload);\n\n// Lấy thời gian hiện tại\nlet now = new Date();\n\nlet timeText = now.toLocaleString(\"vi-VN\", {\n    timeZone: \"Asia/Ho_Chi_Minh\"\n});\n\nconst recipient = String(msg.to || \"\").trim();\n\nif (!recipient) {\n    node.error(\n        \"Không tìm thấy địa chỉ người nhận trong msg.to\",\n        msg\n    );\n\n    return null;\n}\n\n// Email người nhận.\n// Có thể đổi thành email của bạn.\nmsg.to = recipient;\n\n// Tiêu đề email\nmsg.topic = \"Báo cáo tưới nước hằng ngày - Vườn thông minh IoT\";\n\n// Nội dung email\nmsg.payload =\n    `BÁO CÁO HỆ THỐNG VƯỜN THÔNG MINH IOT\n\nThời gian gửi báo cáo: ${timeText}\n\nHôm nay hệ thống đã kích hoạt tưới nước: ${todayCount} lần.\n\nGhi chú:\n- Đây là email báo cáo định kỳ hằng ngày.\n- Chức năng này dùng riêng cho yêu cầu Email.\n- Không dùng chung điều kiện với thông báo nhanh.\n\nTrân trọng,\nHệ thống Vườn Thông Minh IoT`;\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 670,
-        "y": 280,
+        "x": 910,
+        "y": 300,
         "wires": [
             [
                 "6dcc5de72aa62cc9",
-                "b1c6bdfdbd430b82"
+                "f7d688235106b4c9"
             ]
         ]
     },
@@ -1919,8 +1683,8 @@
         "tls": true,
         "name": "",
         "dname": "Gửi email",
-        "x": 920,
-        "y": 280,
+        "x": 1140,
+        "y": 300,
         "wires": []
     },
     {
@@ -1941,52 +1705,278 @@
         "raw": false,
         "className": "",
         "name": "",
-        "x": 650,
-        "y": 360,
+        "x": 890,
+        "y": 380,
         "wires": [
             []
         ]
     },
     {
-        "id": "ccb4cf1e93193c45",
+        "id": "85b844a6b20ffe2c",
         "type": "function",
         "z": "c46b4338b9d0b0c2",
-        "name": "Reset số lần tưới",
-        "func": "// Sau khi gửi email báo cáo xong,\n// reset số lần tưới về 0 để bắt đầu chu kỳ mới.\nflow.set(\"wateringCount\", 0);\n\nmsg.payload = \"Đã gửi email và reset số lần tưới về 0.\";\n\nreturn msg;",
+        "name": "Đổi độ ẩm sang số",
+        "func": "msg.payload = Number(msg.payload);\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1070,
-        "y": 340,
+        "x": 370,
+        "y": 60,
+        "wires": [
+            [
+                "9ebe443d79e0f96f"
+            ]
+        ]
+    },
+    {
+        "id": "edaf29be6a55424d",
+        "type": "mqtt in",
+        "z": "c46b4338b9d0b0c2",
+        "name": "Nhận số lần tưới ",
+        "topic": "doan_vuon/pump/count",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "45e44e70e4f7d4b9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 180,
+        "wires": [
+            [
+                "5952360da8a50b5f"
+            ]
+        ]
+    },
+    {
+        "id": "5952360da8a50b5f",
+        "type": "function",
+        "z": "c46b4338b9d0b0c2",
+        "name": "Lưu tổng số lần tưới",
+        "func": "const count = Number(msg.payload);\n\nif (!Number.isFinite(count)) {\n    return null;\n}\n\nflow.set(\"pump_total_current\", count);\n\nmsg.payload = count;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 180,
         "wires": [
             []
         ]
     },
     {
-        "id": "b1c6bdfdbd430b82",
-        "type": "delay",
+        "id": "6e89ce4d77e1e1a6",
+        "type": "inject",
         "z": "c46b4338b9d0b0c2",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "2",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 880,
-        "y": 340,
+        "name": "Chốt mốc đầu ngày 00:00",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 00 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 240,
         "wires": [
             [
-                "ccb4cf1e93193c45"
+                "e8a244bec26e10a8"
+            ]
+        ]
+    },
+    {
+        "id": "e8a244bec26e10a8",
+        "type": "function",
+        "z": "c46b4338b9d0b0c2",
+        "name": "Lưu mốc đầu ngày ",
+        "func": "const current = flow.get(\"pump_total_current\");\n\nif (current === undefined || current === null) {\n    node.warn(\"Chưa nhận được pump/count từ ESP32\");\n    return null;\n}\n\nconst baseline = Number(current);\n\nflow.set(\"pump_daily_baseline\", baseline);\n\nmsg.payload = {\n    message: \"Đã lưu mốc đầu ngày\",\n    baseline: baseline\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8b89ad4cf63b80ce",
+        "type": "function",
+        "z": "c46b4338b9d0b0c2",
+        "name": "Tính số lần tưới hôm nay",
+        "func": "const current = Number(flow.get(\"pump_total_current\"));\nconst baseline = Number(flow.get(\"pump_daily_baseline\"));\n\nif (!Number.isFinite(current)) {\n    msg.payload = \"Chưa nhận được tổng số lần tưới từ ESP32\";\n    return msg;\n}\n\nif (!Number.isFinite(baseline)) {\n    msg.payload = \"Chưa có mốc đầu ngày\";\n    return msg;\n}\n\nlet todayCount = Math.max(0, current - baseline);\n\n// Phòng trường hợp counter bị reset\nif (todayCount < 0) {\n    todayCount = 0;\n}\n\n\nflow.set(\"email_today_count\", todayCount);\n\nmsg.payload = todayCount;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 320,
+        "wires": [
+            [
+                "7415a16c5a7072e4"
+            ]
+        ]
+    },
+    {
+        "id": "fe78fa6670afa0c4",
+        "type": "inject",
+        "z": "c46b4338b9d0b0c2",
+        "name": "Gửi tự động lúc 20:00",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 20 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 380,
+        "wires": [
+            [
+                "8b89ad4cf63b80ce"
+            ]
+        ]
+    },
+    {
+        "id": "65e8458b2caa247d",
+        "type": "mqtt in",
+        "z": "c46b4338b9d0b0c2",
+        "name": "Nhận trạng thái wifi",
+        "topic": "doan_vuon/status/wifi",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "45e44e70e4f7d4b9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 480,
+        "wires": [
+            [
+                "1bd4427721b27f88"
+            ]
+        ]
+    },
+    {
+        "id": "1bd4427721b27f88",
+        "type": "function",
+        "z": "c46b4338b9d0b0c2",
+        "name": "Xử lý trạng thái wifi",
+        "func": "const status = String(msg.payload || \"\").trim();\n\nif (status === \"DA_KET_NOI_WIFI\") {\n    msg.payload = \"🟢 Đã kết nối WiFi\";\n    msg.wifiConnected = true;\n}\nelse if (status === \"MAT_KET_NOI_WIFI\") {\n    msg.payload = \"🔴 Mất kết nối WiFi\";\n    msg.wifiConnected = false;\n}\nelse {\n    msg.payload = \"⚪ Không xác định\";\n    msg.wifiConnected = false;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 480,
+        "wires": [
+            [
+                "f8cfd1626608dd5b"
+            ]
+        ]
+    },
+    {
+        "id": "f8cfd1626608dd5b",
+        "type": "ui-text",
+        "z": "c46b4338b9d0b0c2",
+        "group": "8cc669342acdbda5",
+        "order": 1,
+        "width": "5",
+        "height": "5",
+        "name": "Trạng thái Wifi",
+        "label": "Trạng thái Wifi hiện tại",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": true,
+        "font": "Times New Roman,Times,serif",
+        "fontSize": "19",
+        "color": "#ff0000",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 680,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "f7d688235106b4c9",
+        "type": "function",
+        "z": "c46b4338b9d0b0c2",
+        "name": "Cập nhật nhật ký báo số lần tưới",
+        "func": "const count = Number(flow.get(\"email_today_count\"));\n\nconst now = new Date();\n\nconst time = now.toLocaleTimeString(\"vi-VN\", {\n    timeZone: \"Asia/Ho_Chi_Minh\",\n    hour: \"2-digit\",\n    minute: \"2-digit\"\n});\n\nlet logs = flow.get(\"notification_logs\") || [];\n\nconst newLog = {\n    time: time,\n    type: \"Email\",\n    content: `Báo cáo hôm nay: ${Number.isFinite(count) ? count : 0} lần tưới`,\n    status: \"Đã gửi\"\n};\n\n// Thêm log mới lên đầu\nlogs.unshift(newLog);\n\n// Chỉ giữ 5 log gần nhất\nlogs = logs.slice(0, 5);\n\n// Lưu lại trong Node-RED\nflow.set(\"notification_logs\", logs);\n\n// Gửi CẢ MẢNG sang ui-table\nmsg.payload = logs;\n\n// Không giới hạn message cho riêng browser vừa bấm\ndelete msg._client;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1220,
+        "y": 380,
+        "wires": [
+            [
+                "f8922cd2f085deb0"
+            ]
+        ]
+    },
+    {
+        "id": "793cd63b99d29212",
+        "type": "inject",
+        "z": "c46b4338b9d0b0c2",
+        "name": "giả lập",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "3",
+        "payloadType": "num",
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "5952360da8a50b5f"
             ]
         ]
     },
